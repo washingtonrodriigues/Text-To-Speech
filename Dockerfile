@@ -1,36 +1,32 @@
 FROM python:3.10-slim
 
+# Evita prompts interactivos
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
     ffmpeg \
-    libsndfile1 \
-    libasound2-dev \
-    build-essential \
     git \
     curl \
-    && rm -rf /var/lib/apt/lists/*
+    libsndfile1 \
+    && apt-get clean
 
-# Criar venv
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-ENV COQUI_TOS_AGREED=1
-
+# Criar diretório da app
 WORKDIR /app
 
-# Copiar requirements
+# Copiar arquivos
 COPY requirements.txt .
+COPY api_xtts.py .
 
-# Atualizar pip
-RUN pip install --upgrade pip
-
-# Instalar PyTorch CPU + dependências
-RUN pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu
-
-# Instalar restante
+# Instalar dependências Python
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+# Baixar o modelo XTTS-v2 ANTES do runtime
+RUN python3 - << 'EOF'
+from TTS.api import TTS
+TTS("tts_models/multilingual/multi-dataset/xtts_v2")
+EOF
 
 EXPOSE 8000
 
-CMD ["python", "api_xtts.py"]
+CMD ["python3", "api_xtts.py"]
