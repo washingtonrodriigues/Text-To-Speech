@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
 # Criar venv
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
+ENV COQUI_TOS_AGREED=1
 
 WORKDIR /app
 
