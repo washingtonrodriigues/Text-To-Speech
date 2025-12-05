@@ -1,15 +1,19 @@
-FROM python:3.10-slim
+FROM python:3.10
 
 # Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
     ffmpeg \
+    libsndfile1 \
+    libasound2-dev \
+    build-essential \
+    git \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Criar diretório da aplicação
 WORKDIR /app
 
-# Instalar Python dependencies
+# Instalar dependências Python
+RUN pip install --upgrade pip
 RUN pip install --no-cache-dir \
     torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu \
     TTS \
@@ -18,14 +22,10 @@ RUN pip install --no-cache-dir \
     python-multipart \
     pydub
 
-# Copiar código da aplicação
+# Copiar arquivos
 COPY api_xtts.py .
-
-# Copiar arquivo de voz de referência (opcional)
 COPY female_voice.opus* ./
 
-# Expor porta
 EXPOSE 8000
 
-# Comando para executar
 CMD ["python", "api_xtts.py"]
