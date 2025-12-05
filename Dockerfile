@@ -15,7 +15,8 @@ RUN pip install --no-cache-dir \
     TTS \
     fastapi \
     uvicorn[standard] \
-    python-multipart
+    python-multipart \
+    pydub
 
 # Copiar código da aplicação
 COPY api_xtts.py .
