@@ -1,31 +1,22 @@
-FROM python:3.10
+FROM python:3.10-slim
 
-# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
     ffmpeg \
     libsndfile1 \
-    libasound2-dev \
     build-essential \
-    git \
-    curl \
     && rm -rf /var/lib/apt/lists/*
+
+# Criar venv
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
 WORKDIR /app
 
-# Instalar dependências Python
+COPY requirements.txt .
+
 RUN pip install --upgrade pip
-RUN pip install --no-cache-dir \
-    torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cpu \
-    TTS \
-    fastapi \
-    uvicorn[standard] \
-    python-multipart \
-    pydub
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copiar arquivos
-COPY api_xtts.py .
-COPY female_voice.opus* ./
-
-EXPOSE 8000
+COPY . .
 
 CMD ["python", "api_xtts.py"]
