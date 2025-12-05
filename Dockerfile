@@ -22,7 +22,7 @@ COPY api_xtts.py .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Baixar o modelo XTTS-v2 ANTES do runtime
-RUN python3 - << 'EOF'
+RUN python3
 from TTS.api import TTS
 TTS("tts_models/multilingual/multi-dataset/xtts_v2")
 EOF
