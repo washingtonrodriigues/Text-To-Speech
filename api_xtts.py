@@ -1,4 +1,7 @@
 import os
+os.environ["COQUI_TOS_AGREED"] = "1"
+os.environ["COQUI_COMMERCIAL_LICENSE"] = "0"
+
 import tempfile
 import base64
 from typing import Optional
@@ -9,6 +12,7 @@ import uvicorn
 from TTS.api import TTS
 import torch
 from pydub import AudioSegment
+
 
 class TTSRequest(BaseModel):
     text: str
