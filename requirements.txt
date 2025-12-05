@@ -1,8 +1,6 @@
-torch
-torchvision
-torchaudio
-coqui-tts
-fastapi
-uvicorn[standard]
-python-multipart
+TTS==0.22.0
+torch==2.1.0
+torchaudio==2.1.0
 pydub
+fastapi
+uvicorn
